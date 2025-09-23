@@ -1,0 +1,38 @@
+line-length = 120
+
+exclude = [
+    "*venv",
+]
+
+[lint]
+select = [
+    "Q",       # flake8-quotes
+    "C90",     # mccabe
+    "RUF",     # ruff special check
+    "T20",     # flake8-print
+    "RET",     # flake8-return
+    "TID",     # flake8-tidy-imports
+    "E",       # pycodestyle errors
+    "W",       # pycodestyle warnings
+    "D",       # pydocstyle
+    "F",       # pyflakes
+    "B",       # flake8-bugbear
+    "N",       # pep8-naming
+    "F",       # pyflakes
+    "ANN",     # flake8-annotations
+]
+ignore = [
+    "RUF010", "RUF002", "RUF012", "E741", "D202", "D212", "D200",
+    "D104", "D100", "D101", "D107", "D400", "N818",
+    "ANN002", "ANN003", "ANN204", "ANN401", "B904", "B010",
+    "RET505",
+]
+
+[lint.flake8-quotes]
+inline-quotes = "single"
+multiline-quotes = "double"
+docstring-quotes = "double"
+avoid-escape = false
+
+[lint.pydocstyle]
+convention = "pep257"
