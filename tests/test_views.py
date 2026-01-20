@@ -1,6 +1,10 @@
+from http import HTTPStatus
+
 import pytest
 from django.test import Client
 from django.urls import reverse
+
+from tests.constants import CATEGORY_TITLE_HISTORY
 
 
 @pytest.mark.django_db
@@ -11,11 +15,11 @@ class TestCategoryAPI:
         url = reverse('category-list')
         response = client.post(
             url,
-            {'title': 'History'},
-            content_type='application/json'
+            {'title': CATEGORY_TITLE_HISTORY},
+            content_type='application/json',
         )
-        assert response.status_code == 201
+        assert response.status_code == HTTPStatus.CREATED
 
         response = client.get(url)
-        assert response.status_code == 200
-        assert response.json()[0]['title'] == 'History'
+        assert response.status_code == HTTPStatus.OK
+        assert response.json()[0]['title'] == CATEGORY_TITLE_HISTORY

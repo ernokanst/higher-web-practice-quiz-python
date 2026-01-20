@@ -2,13 +2,18 @@
 
 from django.db import models
 
-from core.constants import (CATEGORY_TITLE_MAX_LENGTH, DIFFICULTY_CHOICES,
-                            DIFFICULTY_EASY, DIFFICULTY_MAX_LENGTH,
-                            QUESTION_CORRECT_ANSWER_MAX_LENGTH,
-                            QUESTION_DESCRIPTION_MAX_LENGTH,
-                            QUESTION_EXPLANATION_MAX_LENGTH,
-                            QUESTION_TEXT_MAX_LENGTH,
-                            QUIZ_DESCRIPTION_MAX_LENGTH, QUIZ_TITLE_MAX_LENGTH)
+from core.constants import (
+    CATEGORY_TITLE_MAX_LENGTH,
+    DIFFICULTY_CHOICES,
+    DIFFICULTY_EASY,
+    DIFFICULTY_MAX_LENGTH,
+    QUESTION_CORRECT_ANSWER_MAX_LENGTH,
+    QUESTION_DESCRIPTION_MAX_LENGTH,
+    QUESTION_EXPLANATION_MAX_LENGTH,
+    QUESTION_TEXT_MAX_LENGTH,
+    QUIZ_DESCRIPTION_MAX_LENGTH,
+    QUIZ_TITLE_MAX_LENGTH,
+)
 
 
 class Category(models.Model):
@@ -20,15 +25,16 @@ class Category(models.Model):
         verbose_name='Название',
     )
 
-    def __str__(self) -> str:
-        """Строковое представление категории."""
-        return self.title
-
     class Meta:
         """Метаданные модели Category."""
 
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+        ordering = ('title',)
+
+    def __str__(self) -> str:
+        """Строковое представление категории."""
+        return self.title
 
 
 class Quiz(models.Model):
@@ -45,15 +51,16 @@ class Quiz(models.Model):
         verbose_name='Описание',
     )
 
-    def __str__(self) -> str:
-        """Строковое представление квиза."""
-        return self.title
-
     class Meta:
         """Метаданные модели Quiz."""
 
         verbose_name = 'Квиз'
         verbose_name_plural = 'Квизы'
+        ordering = ('title',)
+
+    def __str__(self) -> str:
+        """Строковое представление квиза."""
+        return self.title
 
 
 class Question(models.Model):
@@ -62,13 +69,11 @@ class Question(models.Model):
     quiz = models.ForeignKey(
         Quiz,
         on_delete=models.CASCADE,
-        related_name='questions',
         verbose_name='Квиз',
     )
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        related_name='questions',
         verbose_name='Категория',
     )
     text = models.CharField(
@@ -99,12 +104,14 @@ class Question(models.Model):
         verbose_name='Сложность',
     )
 
-    def __str__(self) -> str:
-        """Строковое представление вопроса."""
-        return self.text
-
     class Meta:
         """Метаданные модели Question."""
 
         verbose_name = 'Вопрос'
         verbose_name_plural = 'Вопросы'
+        default_related_name = 'questions'
+        ordering = ('quiz', 'id')
+
+    def __str__(self) -> str:
+        """Строковое представление вопроса."""
+        return self.text

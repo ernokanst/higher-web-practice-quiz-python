@@ -2,7 +2,12 @@
 
 from rest_framework import serializers
 
-from core.constants import DIFFICULTY_EASY, DIFFICULTY_HARD, DIFFICULTY_MEDIUM
+from core.constants import (
+    DIFFICULTY_EASY,
+    DIFFICULTY_HARD,
+    DIFFICULTY_MEDIUM,
+    QUESTION_OPTIONS_MIN_COUNT,
+)
 
 
 def normalize_non_empty_str(value: object, field_name: str) -> str:
@@ -27,7 +32,8 @@ def validate_difficulty(value: object) -> str:
     allowed = {DIFFICULTY_EASY, DIFFICULTY_MEDIUM, DIFFICULTY_HARD}
     if difficulty not in allowed:
         raise serializers.ValidationError(
-            'Поле difficulty должно быть одним из значений: easy, medium, hard.'
+            'Поле difficulty должно быть одним из значений: '
+            'easy, medium, hard.'
         )
     return difficulty
 
@@ -52,9 +58,10 @@ def normalize_options(value: object) -> list[str]:
             )
         normalized.append(option)
 
-    if len(normalized) < 2:
+    if len(normalized) < QUESTION_OPTIONS_MIN_COUNT:
         raise serializers.ValidationError(
-            'Должно быть минимум 2 варианта ответа.'
+            f'Должно быть минимум {QUESTION_OPTIONS_MIN_COUNT} '
+            'варианта ответа.'
         )
 
     if len(set(normalized)) != len(normalized):
@@ -77,7 +84,9 @@ def validate_correct_answer_in_options(
             'correct_answer',
         )
     except serializers.ValidationError as exc:
-        errors['correct_answer'] = exc.detail if isinstance(exc.detail, list) else [str(exc.detail)]
+        errors['correct_answer'] = (
+            exc.detail if isinstance(exc.detail, list) else [str(exc.detail)]
+        )
         raise serializers.ValidationError(errors) from None
 
     if normalized_correct not in options:

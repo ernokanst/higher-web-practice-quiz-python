@@ -1,0 +1,7 @@
+"""Константы тестов проекта."""
+
+CATEGORY_TITLE_HISTORY = 'History'
+CATEGORY_TITLE_NEW = 'New'
+CATEGORY_TITLE_OLD = 'Old'
+CATEGORY_TITLE_SCIENCE = 'Science'
+CATEGORY_TITLE_TEMP = 'Temp'

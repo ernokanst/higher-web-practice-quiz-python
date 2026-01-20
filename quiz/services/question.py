@@ -4,6 +4,7 @@ import random
 
 from quiz.dao import AbstractQuestionService
 from quiz.models import Question, Quiz
+from quiz.services.utils import update_instance
 
 
 class QuestionService(AbstractQuestionService):
@@ -74,10 +75,7 @@ class QuestionService(AbstractQuestionService):
         :return: Обновленный вопрос.
         """
         question = Question.objects.get(id=question_id)
-        for key, value in data.items():
-            setattr(question, key, value)
-        question.save()
-        return question
+        return update_instance(question, data)
 
     def delete_question(self, question_id: int) -> None:
         """

@@ -3,17 +3,16 @@
 from rest_framework import serializers
 
 from quiz.models import Category, Question, Quiz
-from quiz.validators import (normalize_non_empty_str, normalize_options,
-                             validate_correct_answer_in_options,
-                             validate_difficulty)
+from quiz.validators import (
+    normalize_non_empty_str,
+    normalize_options,
+    validate_correct_answer_in_options,
+    validate_difficulty,
+)
 
 
 class CategorySerializer(serializers.ModelSerializer):
     """Сериализатор для категорий."""
-
-    def validate_title(self, value: object) -> str:
-        """Проверяет название категории."""
-        return normalize_non_empty_str(value, 'title')
 
     class Meta:
         """Метаданные сериализатора Category."""
@@ -21,13 +20,13 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'title']
 
+    def validate_title(self, value: object) -> str:
+        """Проверяет название категории."""
+        return normalize_non_empty_str(value, 'title')
+
 
 class QuizSerializer(serializers.ModelSerializer):
     """Сериализатор для квизов."""
-
-    def validate_title(self, value: object) -> str:
-        """Проверяет название квиза."""
-        return normalize_non_empty_str(value, 'title')
 
     class Meta:
         """Метаданные сериализатора Quiz."""
@@ -35,9 +34,29 @@ class QuizSerializer(serializers.ModelSerializer):
         model = Quiz
         fields = ['id', 'title', 'description']
 
+    def validate_title(self, value: object) -> str:
+        """Проверяет название квиза."""
+        return normalize_non_empty_str(value, 'title')
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     """Сериализатор для вопросов."""
+
+    class Meta:
+        """Метаданные сериализатора Question."""
+
+        model = Question
+        fields = [
+            'id',
+            'quiz',
+            'category',
+            'text',
+            'description',
+            'options',
+            'correct_answer',
+            'explanation',
+            'difficulty',
+        ]
 
     def validate_text(self, value: object) -> str:
         """Проверяет текст вопроса."""
@@ -68,19 +87,3 @@ class QuestionSerializer(serializers.ModelSerializer):
         attrs['correct_answer'] = normalized_correct
         attrs['options'] = normalized_options
         return attrs
-
-    class Meta:
-        """Метаданные сериализатора Question."""
-
-        model = Question
-        fields = [
-            'id',
-            'quiz',
-            'category',
-            'text',
-            'description',
-            'options',
-            'correct_answer',
-            'explanation',
-            'difficulty',
-        ]

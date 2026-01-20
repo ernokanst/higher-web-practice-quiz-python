@@ -1,33 +1,37 @@
 import pytest
 
 from quiz.models import Category
-from quiz.services.category import CategoryService
+from tests.constants import CATEGORY_TITLE_NEW, CATEGORY_TITLE_SCIENCE
 
 
 @pytest.mark.django_db
 class TestCategoryService:
-    def setup_method(self) -> None:
-        """Подготавливает сервис."""
-
-        self.service = CategoryService()
-
-    def test_create_and_get_category(self) -> None:
+    def test_create_and_get_category(self, category_service) -> None:
         """Тест создания и получения категории."""
 
-        category = self.service.create_category('Science')
-        fetched = self.service.get_category(category.id)
-        assert fetched.title == 'Science'
+        category = category_service.create_category(CATEGORY_TITLE_SCIENCE)
+        fetched = category_service.get_category(category.id)
+        assert fetched.title == CATEGORY_TITLE_SCIENCE
 
-    def test_update_category(self) -> None:
+    def test_update_category(
+        self,
+        category_service,
+        category_old: Category,
+    ) -> None:
         """Тест обновления категории."""
 
-        category = Category.objects.create(title='Old')
-        updated = self.service.update_category(category.id, {'title': 'New'})
-        assert updated.title == 'New'
+        updated = category_service.update_category(
+            category_old.id,
+            {'title': CATEGORY_TITLE_NEW},
+        )
+        assert updated.title == CATEGORY_TITLE_NEW
 
-    def test_delete_category(self) -> None:
+    def test_delete_category(
+        self,
+        category_service,
+        category_temp: Category,
+    ) -> None:
         """Тест удаления категории."""
 
-        category = Category.objects.create(title='Temp')
-        self.service.delete_category(category.id)
+        category_service.delete_category(category_temp.id)
         assert Category.objects.count() == 0

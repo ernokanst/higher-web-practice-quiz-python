@@ -2,6 +2,7 @@
 
 from quiz.dao import AbstractQuizService
 from quiz.models import Quiz
+from quiz.services.utils import update_instance
 
 
 class QuizService(AbstractQuizService):
@@ -47,10 +48,7 @@ class QuizService(AbstractQuizService):
         :return: Обновленный квиз.
         """
         quiz = Quiz.objects.get(id=quiz_id)
-        for key, value in data.items():
-            setattr(quiz, key, value)
-        quiz.save()
-        return quiz
+        return update_instance(quiz, data)
 
     def delete_quiz(self, quiz_id: int) -> None:
         """

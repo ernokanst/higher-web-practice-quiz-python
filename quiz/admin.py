@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
+from core.constants import QUESTION_TEXT_PREVIEW_LENGTH
 from quiz.models import Category, Question, Quiz
 
 
@@ -41,5 +42,8 @@ class QuestionAdmin(admin.ModelAdmin):
 
     @admin.display(description='Текст вопроса')
     def text_preview(self, obj: Question) -> str:
-        """Отображает первые 50 символов текста вопроса."""
-        return obj.text[:50] if len(obj.text) > 50 else obj.text
+        """Отображает текст вопроса для списка."""
+        preview = obj.text[:QUESTION_TEXT_PREVIEW_LENGTH]
+        if len(obj.text) > QUESTION_TEXT_PREVIEW_LENGTH:
+            return preview
+        return obj.text
